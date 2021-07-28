@@ -1,4 +1,16 @@
 <resources>
+  <string name="token">Token JSON</string>
+  <string name="set">Set Token</string>
+
+  <string name="network_id">Network ID</string>
+  <string name="invite_url">Invite URL</string>
+  <string name="node_id">Node ID</string>
+  <string name="join">Join !!</string>
+
   <string name="app_name">SimpleChatExample</string>
   <string name="client_id">your client id here</string>
+  <string name="destination_node_id">Destination Node ID, leave empty for broadcasting</string>
+
+  <string name="send_data">Send Data</string>
+  <string name="send_info">Send Info</string>
 </resources>
