@@ -52,24 +52,20 @@ Sample Android application to create virtual rooms for sharing information and c
     }
   }
   ```
-  - Authenticating app
-  ```java
-  class Application {
-    public static void main(String[] args) {
-      // Init CocoClient
-
-      // GET https://api.getcoco.buzz/oauth/token
-      CocoClient.getInstance().setTokens("<RESPONSE BODY>");
-    }
-  }
-  ```
   - Connect to a Network with invite url
   ```java
   class Application {
     public static void main(String[] args) {
       // Init CocoClient
 
-      // POST https://api.getcoco.buzz/network-manager/networks/:networkId/generate-invite
+      /**
+       * POST: https://api.getcoco.buzz/network-manager/networks/:networkId/generate-invite
+       * AUTH: Bearer Token {{access_token}}
+       * BODY: {
+       *        "appId": "{{client_id}}",
+       *        "appCapabilities": [ 0, 1, 2 ]
+       *       }
+       */
       new Network.ConnectArgs()
           .setNetworkId("<NETWORK ID>")
           .setNodeId(NODE_ID)
