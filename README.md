@@ -143,6 +143,7 @@ Sample Android application to create virtual rooms for sharing information and c
   }
   ```
 # NOTE
+  - Some of the best practices have been omitted for sake of simplicity and readability
   - Above mentioned APIs are subject to change
   - The manual .jar and .so placement will be replaced with gradle dependency
   - NativeCallbacksInterface will be replaced with inline callback
