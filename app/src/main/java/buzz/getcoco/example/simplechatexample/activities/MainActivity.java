@@ -117,7 +117,12 @@ public class MainActivity extends AppCompatActivity {
     CocoClient.getInstance().addSubscription(listener = new DefaultNativeCallbacksInterface() {
       @Override
       public void connectStatusCallback(Network network, Object context) {
-        runOnUiThread(() -> Toast.makeText(MainActivity.this, network.getState() + " : " + network.getName(), Toast.LENGTH_SHORT).show());
+        runOnUiThread(() -> Toast.makeText(MainActivity.this, "status: " + network.getState() + " : " + network.getName(), Toast.LENGTH_SHORT).show());
+      }
+
+      @Override
+      public void networkMetadataCallback(Network network) {
+        runOnUiThread(() -> Toast.makeText(MainActivity.this, "metadata: " + network.getMetadata() + " : " + network.getName(), Toast.LENGTH_SHORT).show());
       }
     });
   }
