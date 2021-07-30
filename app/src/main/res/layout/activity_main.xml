@@ -1,18 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  tools:context=".MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.MainActivity">
 
-  <TextView
+  <EditText
+    android:id="@+id/et_invite_url"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toTopOf="parent"
+    android:hint="@string/invite_url"
+    android:layout_margin="30dp"
+    android:autofillHints="text"
+    android:inputType="textUri" />
+
+  <EditText
+    android:id="@+id/et_network_id"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toBottomOf="@id/et_invite_url"
+    android:hint="@string/network_id"
+    android:layout_marginStart="30dp"
+    android:layout_marginEnd="30dp"
+    android:autofillHints="text"
+    android:inputType="text" />
+
+  <EditText
+    android:id="@+id/et_node_id"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toBottomOf="@id/et_network_id"
+    android:hint="@string/node_id"
+    android:layout_marginStart="30dp"
+    android:layout_marginEnd="30dp"
+    android:autofillHints="number"
+    android:inputType="numberDecimal" />
+
+  <Button
+    android:id="@+id/btn_join"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="Hello World!"
-    app:layout_constraintBottom_toBottomOf="parent"
+    android:text="@string/join"
+    app:layout_constraintTop_toBottomOf="@id/et_node_id"
+    app:layout_constraintBottom_toTopOf="@id/et_destination_node_id"
+    app:layout_constraintVertical_bias="0"
     app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    app:layout_constraintRight_toRightOf="parent" />
 
+  <EditText
+    android:id="@+id/et_destination_node_id"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintBottom_toTopOf="@id/btn_start_messaging"
+    android:hint="@string/destination_node_id"
+    android:layout_marginStart="30dp"
+    android:layout_marginEnd="30dp"
+    android:autofillHints="number"
+    android:inputType="numberDecimal" />
+
+  <Button
+    android:id="@+id/btn_start_messaging"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/start_messaging"
+    android:layout_margin="30dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent" 
+    app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

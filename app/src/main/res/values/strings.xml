@@ -1,3 +1,21 @@
 <resources>
   <string name="app_name">SimpleChatExample</string>
+  <string name="join">Join !!</string>
+
+  <string name="client_id">your client id here</string>
+  <string name="destination_node_id">Destination Node ID, leave empty for broadcasting</string>
+
+  <string name="start_messaging">Start Messaging!</string>
+  <string name="send_data">Send Data</string>
+  <string name="send_info">Send Info</string>
+  <string name="submit">SUBMIT</string>
+  <string name="invite_url">Invite URL</string>
+  <string name="node_id">Node ID</string>
+  <string name="network_id">Network ID</string>
+  <string name="send">SEND</string>
+  <string name="enter_your_message">Enter Your Message</string>
+  <string name="example_message">This is a message</string>
+  <string name="network_id_field_cannot_be_empty">NetworkId field cannot be empty, please rejoin</string>
+  <string name="fill_empty_fields">Please fill empty fields</string>
+  <string name="connected_successfully">Connection successful proceed to messaging</string>
 </resources>
