@@ -47,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
         return;
       }
 
+      /*
+       * If Invite URL is not provided then connecting from saved networks
+       * else joining with invite URL
+       */
       if (TextUtils.isEmpty(inviteUrl) || TextUtils.isEmpty(nodeIdStr)) {
         Network network = null;
 
@@ -65,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         if (null != network) {
           try {
             network.connect();
-            Toast.makeText(this, R.string.connected_successfully, Toast.LENGTH_SHORT).show();
           } catch (Exception e) {
             Log.d(TAG, "onCreate: err", e);
           }
