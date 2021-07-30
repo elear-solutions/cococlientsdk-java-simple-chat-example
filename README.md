@@ -130,12 +130,47 @@ Sample Android application to create virtual rooms for sharing information and c
       CocoClient.getInstance().addSubscription(new DefaultNativeCallbacksInterface() {
 
         @Override
+        public void nodeConnectionStatusCallback(Network network, long nodeId, NodeType nodeType, boolean isOnline, Object networkContext) {
+          // determines if the node is online or not
+          // do something
+        }
+
+        @Override
         public void receiveDataCallback(Network network, long sourceNodeId, String data) {
           // do something
         }
 
         @Override
         public void contentInfoCallback(Network network, long sourceNodeId, long contentTime, String data) {
+          // do something
+        }
+      });
+    }
+  }
+  ```
+  - Disconnecting from network
+  ```java
+  class Application {
+    public static void main(String[] args) {
+      // Init CocoClient
+      // Connect to a Network
+
+      // Get the connected network
+      Network network = CocoClient.getInstance().getNetwork("<NETWORK ID>");
+      network.disconnect();
+    }
+  }
+  ```
+  - Listening for connection status
+  ```java
+  class Application {
+    public static void main(String[] args) {
+      // Init CocoClient
+
+      CocoClient.getInstance().addSubscription(new DefaultNativeCallbacksInterface() {
+        @Override
+        public void connectStatusCallback(Network network, Object context) {
+          Network.State status = network.getState();
           // do something
         }
       });
