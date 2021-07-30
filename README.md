@@ -166,11 +166,29 @@ Sample Android application to create virtual rooms for sharing information and c
   class Application {
     public static void main(String[] args) {
       // Init CocoClient
+      // Connect to a Network
 
       CocoClient.getInstance().addSubscription(new DefaultNativeCallbacksInterface() {
         @Override
         public void connectStatusCallback(Network network, Object context) {
           Network.State status = network.getState();
+          // do something
+        }
+      });
+    }
+  }
+  ```
+  - Listening for network metadata
+  ```java
+  class Application {
+    public static void main(String[] args) {
+      // Init CocoClient
+      // Connect to a Network
+
+      CocoClient.getInstance().addSubscription(new DefaultNativeCallbacksInterface() {
+        @Override
+        public void networkMetadataCallback(Network network) {
+          network.getMetadata();
           // do something
         }
       });
