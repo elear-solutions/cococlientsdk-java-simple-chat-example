@@ -177,6 +177,33 @@ Sample Android application to create virtual rooms for sharing information and c
     }
   }
   ```
+# Gist of using the api
+```java
+  class Application {
+
+    public static void main(String[] args) {
+      DefaultNativeCallbacksInterface listener;
+
+      new CocoClient.Builder().build();
+      new Network.ConnectArgs().connect();
+
+      Network network = CocoClient.getInstance().getNetwork("<NETWORK ID>");
+
+      CocoClient.getInstance().addSubscription(listener = new DefaultNativeCallbacksInterface() {
+        @Override
+        public void receiveDataCallback(Network network, long sourceNodeId, String data) {
+          // listen for messages
+        }
+      });
+
+      network.sendData("hello world", null);
+
+      network.disconnect();
+
+      CocoClient.getInstance().removeSubscription(listener);
+    }
+  }
+```
 # NOTE
   - Some of the best practices have been omitted for sake of simplicity and readability
   - Above mentioned APIs are subject to change
