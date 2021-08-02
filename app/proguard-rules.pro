@@ -19,3 +19,62 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# rules for cococlientsdk-java
+
+# retaining enums of the package
+-keepclassmembers enum buzz.getcoco.api.* { *; }
+
+# retaining all command classes
+-keepclassmembers class * extends buzz.getcoco.api.Command
+
+# Native class
+# keep the class and specified members from being renamed only
+-keepnames class buzz.getcoco.api.Native { native*; }
+# retaining nativeMethods
+-keepclassmembers class buzz.getcoco.api.Native { native*; }
+
+# Network class
+# keep the class and specified members from being renamed only
+-keep class buzz.getcoco.api.Network { *; }
+
+# NativeCallbacks class
+# keep the class and specified members from being removed or renamed
+-keep class buzz.getcoco.api.NativeCallbacks { *; }
+
+# NativeExceptions class
+# keep the class and specified members from being removed or renamed
+-keep class buzz.getcoco.api.NativeExceptions { *; }
+
+
+# rules for gson. Which is used by cococlientsdk-java
+# refer https://github.com/google/gson/blob/master/examples/android-proguard-example/proguard.cfg
+
+##---------------Begin: proguard configuration for Gson  ----------
+# Gson uses generic type information stored in a class file when working with fields. Proguard
+# removes such information by default, so configure it to keep all of it.
+-keepattributes Signature
+
+# For using GSON @Expose annotation
+-keepattributes *Annotation*
+
+# Gson specific classes
+-dontwarn sun.misc.**
+#-keep class com.google.gson.stream.** { *; }
+
+# Application classes that will be serialized/deserialized over Gson
+-keep class com.google.gson.examples.android.model.** { <fields>; }
+
+# Prevent proguard from stripping interface information from TypeAdapter, TypeAdapterFactory,
+# JsonSerializer, JsonDeserializer instances (so they can be used in @JsonAdapter)
+-keep class * extends com.google.gson.TypeAdapter
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
+
+# Prevent R8 from leaving Data object members always null
+-keepclassmembers,allowobfuscation class * {
+  @com.google.gson.annotations.SerializedName <fields>;
+}
+
+##---------------End: proguard configuration for Gson  ----------

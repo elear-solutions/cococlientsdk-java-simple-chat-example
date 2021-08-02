@@ -195,6 +195,7 @@ Sample Android application to create virtual rooms for sharing information and c
     }
   }
   ```
+  - Rules for proguard and r8 located [here](app/proguard-rules.pro)
 # Gist of using the api
 ```java
   class Application {
