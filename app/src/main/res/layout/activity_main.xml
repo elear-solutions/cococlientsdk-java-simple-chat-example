@@ -7,43 +7,52 @@
     tools:context=".activities.MainActivity">
 
   <EditText
-    android:id="@+id/et_invite_url"
+    android:id="@+id/et_base_url"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:layout_constraintTop_toTopOf="parent"
-    android:hint="@string/invite_url"
+    android:hint="@string/base_url"
     android:layout_margin="30dp"
     android:autofillHints="text"
     android:inputType="textUri" />
 
   <EditText
+    android:id="@+id/et_user_name"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toBottomOf="@id/et_base_url"
+    android:layout_marginStart="30dp"
+    android:layout_marginEnd="30dp"
+    android:hint="@string/user_name"
+    android:autofillHints="text" />
+
+  <Button
+    android:id="@+id/btn_login"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/login"
+    app:layout_constraintTop_toBottomOf="@id/et_user_name"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    />
+
+  <EditText
     android:id="@+id/et_network_id"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:layout_constraintTop_toBottomOf="@id/et_invite_url"
+    app:layout_constraintTop_toBottomOf="@id/btn_login"
     android:hint="@string/network_id"
     android:layout_marginStart="30dp"
     android:layout_marginEnd="30dp"
     android:autofillHints="text"
     android:inputType="text" />
 
-  <EditText
-    android:id="@+id/et_node_id"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:layout_constraintTop_toBottomOf="@id/et_network_id"
-    android:hint="@string/node_id"
-    android:layout_marginStart="30dp"
-    android:layout_marginEnd="30dp"
-    android:autofillHints="number"
-    android:inputType="numberDecimal" />
-
   <Button
     android:id="@+id/btn_join"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="@string/join"
-    app:layout_constraintTop_toBottomOf="@id/et_node_id"
+    app:layout_constraintTop_toBottomOf="@id/et_network_id"
     app:layout_constraintBottom_toTopOf="@id/et_destination_node_id"
     app:layout_constraintVertical_bias="0"
     app:layout_constraintLeft_toLeftOf="parent"

@@ -46,7 +46,7 @@ Sample Android application to create virtual rooms for sharing information and c
   class Application {
     public static void main(String[] args) {
       new CocoClient.Builder()
-          .addCallbackListener(new DefaultNativeCallbacksInterface() {})
+          .addCallbackListener(new DefaultNativeCallbacksHandler() {})
           .withPlatform(new PlatformInterface() {})
           .build();
     }
@@ -127,7 +127,7 @@ Sample Android application to create virtual rooms for sharing information and c
       // Init CocoClient
       // Connect to a Network
 
-      CocoClient.getInstance().addSubscription(new DefaultNativeCallbacksInterface() {
+      CocoClient.getInstance().addSubscription(new DefaultNativeCallbacksHandler() {
 
         @Override
         public void nodeConnectionStatusCallback(Network network, long nodeId, NodeType nodeType, boolean isOnline, Object networkContext) {
@@ -168,7 +168,7 @@ Sample Android application to create virtual rooms for sharing information and c
       // Init CocoClient
       // Connect to a Network
 
-      CocoClient.getInstance().addSubscription(new DefaultNativeCallbacksInterface() {
+      CocoClient.getInstance().addSubscription(new DefaultNativeCallbacksHandler() {
         @Override
         public void connectStatusCallback(Network network, Object context) {
           Network.State status = network.getState();
@@ -185,7 +185,7 @@ Sample Android application to create virtual rooms for sharing information and c
       // Init CocoClient
       // Connect to a Network
 
-      CocoClient.getInstance().addSubscription(new DefaultNativeCallbacksInterface() {
+      CocoClient.getInstance().addSubscription(new DefaultNativeCallbacksHandler() {
         @Override
         public void networkMetadataCallback(Network network) {
           network.getMetadata();
@@ -201,14 +201,14 @@ Sample Android application to create virtual rooms for sharing information and c
   class Application {
 
     public static void main(String[] args) {
-      DefaultNativeCallbacksInterface listener;
+      DefaultNativeCallbacksHandler listener;
 
       new CocoClient.Builder().build();
       new Network.ConnectArgs().connect();
 
       Network network = CocoClient.getInstance().getNetwork("<NETWORK ID>");
 
-      CocoClient.getInstance().addSubscription(listener = new DefaultNativeCallbacksInterface() {
+      CocoClient.getInstance().addSubscription(listener = new DefaultNativeCallbacksHandler() {
         @Override
         public void receiveDataCallback(Network network, long sourceNodeId, String data) {
           // listen for messages

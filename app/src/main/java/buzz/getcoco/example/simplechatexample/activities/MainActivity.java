@@ -1,45 +1,69 @@
 package buzz.getcoco.example.simplechatexample.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
-
-import java.io.File;
-import java.util.Locale;
-
-import buzz.getcoco.api.CocoClient;
-import buzz.getcoco.api.DefaultNativeCallbacksInterface;
-import buzz.getcoco.api.NativeCallbacksInterface;
-import buzz.getcoco.api.Network;
-import buzz.getcoco.api.PlatformInterface;
+import androidx.appcompat.app.AppCompatActivity;
 import buzz.getcoco.example.simplechatexample.R;
 import buzz.getcoco.example.simplechatexample.Utilities.Constants;
+import buzz.getcoco.example.simplechatexample.Utilities.LoginHelper;
 import buzz.getcoco.example.simplechatexample.databinding.ActivityMainBinding;
+import buzz.getcoco.media.MediaSession;
+import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
   public static final String TAG = "MainActivity";
-  private NativeCallbacksInterface listener;
-
-  static {
-    System.loadLibrary("cocojni");
-  }
+  MediaSession session;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+    LoginHelper.init(this);
+
+    session = new MediaSession.DoNothingBuilder(this).build();
+
     super.onCreate(savedInstanceState);
+
     ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
 
+    binding.btnLogin.setOnClickListener(v -> {
+      if (LoginHelper.isLoggedIn()) {
+        Log.d(TAG, "onCreate: isLoggedIn");
+        login(binding);
+        return;
+      }
+
+      Editable etBaseUrl = binding.etBaseUrl.getText();
+      Editable etUsername = binding.etUserName.getText();
+
+      String baseUrl = (null == etBaseUrl) ? "" : etBaseUrl.toString();
+      String username = (null == etUsername) ? "" : etUsername.toString();
+
+      if (baseUrl.isEmpty()) {
+        Toast.makeText(this, "enter valid base url", Toast.LENGTH_SHORT).show();
+        return;
+      }
+
+      if (username.isEmpty()) {
+        Toast.makeText(this, "enter valid user name", Toast.LENGTH_SHORT).show();
+        return;
+      }
+
+      Toast.makeText(this, "logging in", Toast.LENGTH_SHORT).show();
+
+      LoginHelper.setBaseUrl(this, baseUrl);
+      LoginHelper.setUsername(this, username);
+
+      login(binding);
+    });
+
     binding.btnJoin.setOnClickListener(v -> {
-      String inviteUrl = binding.etInviteUrl.getText().toString();
-      String nodeIdStr = binding.etNodeId.getText().toString();
       String networkId = binding.etNetworkId.getText().toString();
 
-      Log.d(TAG, "onCreate: input invite url: " + inviteUrl);
-      Log.d(TAG, "onCreate: input nodeId: " + nodeIdStr);
       Log.d(TAG, "onCreate: input networkId: " + networkId);
 
       if (TextUtils.isEmpty(networkId)) {
@@ -47,50 +71,35 @@ public class MainActivity extends AppCompatActivity {
         return;
       }
 
-      /*
-       * If Invite URL is not provided then connecting from saved networks
-       * else joining with invite URL
-       */
-      if (TextUtils.isEmpty(inviteUrl) || TextUtils.isEmpty(nodeIdStr)) {
-        Network network = null;
-
-        try {
-          Network[] networks = CocoClient.getInstance().getSavedNetworks();
-          for (Network n : networks) {
-            if (networkId.equals(n.getId())) {
-              network = n;
-              break;
+      session.getAllSessions()
+          .observe(this, sessionHandleResponse -> {
+            if (null != sessionHandleResponse.getError()) {
+              Toast.makeText(this, "error while fetching all sessions", Toast.LENGTH_SHORT).show();
+              return;
             }
-          }
-        } catch (Exception e) {
-          Log.d(TAG, "onCreate: err", e);
-        }
 
-        if (null != network) {
-          try {
-            network.connect();
-          } catch (Exception e) {
-            Log.d(TAG, "onCreate: err", e);
-          }
-        }
-        return;
-      }
+            List<MediaSession.SessionHandle> handles = (null == sessionHandleResponse.getValue())
+                ? Collections.emptyList() : sessionHandleResponse.getValue();
 
-      long nodeId = Long.parseLong(nodeIdStr);
+            MediaSession.SessionHandle handle = handles.stream()
+                .filter(sessionHandle -> sessionHandle.getId().equals(networkId))
+                .findFirst()
+                .orElse(null);
 
-      runOnNewThread(() -> {
-        Log.d(TAG, "onCreate: connecting to network Id: " + networkId);
+            if (null == handle) {
+              binding.etNetworkId.setText("");
+              Toast
+                  .makeText(this, "network ID was not joined, please re-enter", Toast.LENGTH_SHORT)
+                  .show();
+              return;
+            }
 
-        new Network.ConnectArgs()
-            .setNetworkId(networkId)
-            .setNodeId(nodeId)
-            .setInviteURL(inviteUrl)
-            .setNetworkName("Dummy")
-            .setNetworkType(Network.NetworkType.CALL_NET)
-            .setUserRole(Network.UserRole.OWNER)
-            .setAccessType(Network.AccessType.REMOTE)
-            .connect();
-      });
+            Log.d(TAG, "onCreate: network ID Found");
+            Toast.makeText(MainActivity.this, "metadata: "
+                + handle.getMetadata()
+                + " : "
+                + handle.getName(), Toast.LENGTH_SHORT).show();
+          });
     });
 
     binding.btnStartMessaging.setOnClickListener(v -> {
@@ -104,7 +113,9 @@ public class MainActivity extends AppCompatActivity {
       }
 
       if (TextUtils.isEmpty(networkId)) {
-        Toast.makeText(this, R.string.network_id_field_cannot_be_empty, Toast.LENGTH_SHORT).show();
+        Toast
+            .makeText(this, R.string.network_id_field_cannot_be_empty, Toast.LENGTH_SHORT)
+            .show();
         return;
       }
 
@@ -112,88 +123,30 @@ public class MainActivity extends AppCompatActivity {
       startActivity(intent);
     });
 
-    init(getFilesDir(), getString(R.string.client_id));
     setContentView(binding.getRoot());
-    CocoClient.getInstance().addSubscription(listener = new DefaultNativeCallbacksInterface() {
-      @Override
-      public void connectStatusCallback(Network network, Object context) {
-        runOnUiThread(() -> Toast.makeText(MainActivity.this, "status: " + network.getState() + " : " + network.getName(), Toast.LENGTH_SHORT).show());
+  }
+
+  private void login(ActivityMainBinding binding) {
+    LoginHelper.login().observe(this, tokens -> {
+      if (null == tokens) {
+        Toast.makeText(this, "error fetching tokens, restart app", Toast.LENGTH_SHORT).show();
+        return;
       }
 
-      @Override
-      public void networkMetadataCallback(Network network) {
-        runOnUiThread(() -> Toast.makeText(MainActivity.this, "metadata: " + network.getMetadata() + " : " + network.getName(), Toast.LENGTH_SHORT).show());
-      }
+      session.setAuthTokens(tokens);
+      Toast.makeText(this, "Successfully Logged in", Toast.LENGTH_SHORT).show();
+
+      binding.etBaseUrl.setVisibility(View.GONE);
+      binding.etUserName.setVisibility(View.GONE);
+      binding.btnLogin.setVisibility(View.GONE);
     });
   }
 
   @Override
   protected void onDestroy() {
     super.onDestroy();
-    CocoClient.getInstance().removeSubscription(listener);
-  }
-
-  private static void init(File dir, String clientId) {
-    Log.d(TAG, "init: started");
-    Log.d(TAG, "init: clientId: " + clientId);
-
-    new CocoClient.Builder()
-        .addCallbackListener(new DefaultNativeCallbacksInterface() {
-          @Override
-          public void receiveDataCallback(Network network, long sourceNodeId, String data) {
-            String message = String.format(Locale.US, "receiveDataCallback: nodeId: %d, data: %s", sourceNodeId, data);
-            Log.d(TAG, message);
-          }
-
-          @Override
-          public void contentInfoCallback(Network network, long sourceNodeId, long contentTime, String data) {
-            String message = String.format(Locale.US, "contentInfoCallback: contentTime: %d, nodeId: %d, data: %s", contentTime, sourceNodeId, data);
-            Log.d(TAG, message);
-          }
-        })
-        .withPlatform(new PlatformInterface() {
-          @Override
-          public String getCwdPath() {
-            Log.d(TAG, "getCwdPath: using path: " + dir.getAbsolutePath());
-
-            return dir.getAbsolutePath();
-          }
-
-          @Override
-          public String getDownloadPath() {
-            return dir.getAbsolutePath();
-          }
-
-          @Override
-          public String getClientId() {
-            return clientId;
-          }
-
-          @Override
-          public String getAppAccessList() {
-            return "{\"appCapabilities\": [ 0 ]}";
-          }
-
-          @Override
-          public void OAuthCallback(String authorizationEndpoint, String tokenEndpoint) {
-          }
-        })
-        .build();
-
-    Log.d(TAG, "init: completed");
-  }
-
-  private static void runOnNewThread(ThrowingRunnable runnable) {
-    new Thread(() -> {
-      try {
-        runnable.run();
-      } catch (Throwable tr) {
-        Log.e(TAG, "runOnNewThread: error", tr);
-      }
-    }).start();
-  }
-
-  private interface ThrowingRunnable {
-    void run() throws Throwable;
+    if (null != session) {
+      session.destroy();
+    }
   }
 }
