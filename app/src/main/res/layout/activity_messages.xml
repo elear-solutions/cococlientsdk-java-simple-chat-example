@@ -19,14 +19,15 @@
   <EditText
     android:id="@+id/et_enter_message"
     android:layout_width="0dp"
-    android:layout_height="wrap_content"
+    android:layout_height="0dp"
     android:autofillHints="MultilineText | text"
     android:hint="@string/enter_your_message"
     android:inputType="text"
     android:textColor="@color/black"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toStartOf="@+id/btn_send"
-    app:layout_constraintStart_toStartOf="parent" />
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/rv_messages" />
 
   <Button
     android:id="@+id/btn_send"
@@ -35,5 +36,6 @@
     android:backgroundTint="@color/teal_700"
     android:text="@string/send"
     app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintRight_toRightOf="parent" />
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/rv_messages" />
 </androidx.constraintlayout.widget.ConstraintLayout>

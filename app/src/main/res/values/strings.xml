@@ -9,7 +9,9 @@
   <string name="send_data">Send Data</string>
   <string name="send_info">Send Info</string>
   <string name="submit">SUBMIT</string>
-  <string name="invite_url">Invite URL</string>
+  <string name="base_url">Base URL</string>
+  <string name="user_name">User Name</string>
+  <string name="login">Login</string>
   <string name="node_id">Node ID</string>
   <string name="network_id">Network ID</string>
   <string name="send">SEND</string>
